@@ -1,15 +1,7 @@
-import re, time, socket, gspread, asyncio, argparse, json
+import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime
-from datetime import date
+from genFunc import *
 
-def dateNow():
-    '''
-    returns current date as a string
-    '''
-    now = date.today()
-    full = str(now.day) + "/" + str(now.month) + "/" + str(now.year)
-    return full
 worksheetName=dateNow()
 scope = ['https://spreadsheets.google.com/feeds']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('home/ec2-user/onscoinbot/auth.json', scope)
