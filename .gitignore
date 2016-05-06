@@ -84,3 +84,5 @@ pastSteamIDs.txt
 login.json
 
 __pycache__
+
+.gitignore
