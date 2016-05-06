@@ -36,8 +36,8 @@ while True:
                         with open('subs.txt', 'a') as subs:
                             subs.write(twitchUser+"\n")
                         send_message(CHAN,"/w artemisbot User added to spreadsheet.",con)
-                    elif line[3]==':!say':
-                        send_message(CHAN,message[5:],con)            
+                    elif line[3]==':!querysay':
+                        send_message(CHAN,message[10:],con)            
 
     except socket.error:
         print("Socket died")

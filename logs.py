@@ -34,7 +34,7 @@ while True:
                         if is_number((line[3])[1:]) == False:
                             rawTwitchUser=line[3]
                             twitchUser=rawTwitchUser[1:]
-                            with open('sub-logs/'+timeNow()+'.txt', 'a') as subs:
+                            with open('sub-logs/'+dateNow()+'.txt', 'a') as subs:
                                 subs.write(twitchUser+"\n")
     except socket.error:
         print("Socket died")
