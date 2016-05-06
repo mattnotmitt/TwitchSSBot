@@ -1,10 +1,6 @@
-import re, time, socket, gspread, asyncio, argparse, json, time, random
-from urllib.request import urlopen
-from urllib.error import URLError
+import socket, gspread, time
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime
 from genFunc import *
-from datetime import date
 # --------------------------------------------- Start Settings ----------------------------------------------------
 HOST = "irc.twitch.tv"# Hostname of the IRC-Server in this case twitch's
 PORT = 6667 # Default IRC-Port
