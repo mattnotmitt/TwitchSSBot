@@ -9,8 +9,8 @@ var options = {
         reconnect: true
     },
     identity: {
-        username: "onscoinbot",
-        password: "oauth:ip61c67v1rlygkb39z68lclddmrh3f"
+        username: "xxxxxxxxx",
+        password: "oauth:xxxxxxxxxxxx"
     },
     channels: ["#onscreenlol"]
 };
