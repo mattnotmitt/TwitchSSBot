@@ -3,7 +3,7 @@ This is a project I created for [ONSCREENlol][craig] on twitch.tv.
 
 You must get your own keys for Google Docs, and place them in a file named 'auth.json' located in the repo's root directory. Instructions for this can be found [here][docs] in the gspread docs.
 
-Written for Python 3.4
+Written for Python 3.4 & Node.JS 4
 
 ## Requirements
 
@@ -11,6 +11,7 @@ Written for Python 3.4
 $ pip install gspread
 $ pip install oauth2
 $ pip install oauth2client
+$ npm install twitch_irc
 ```
 ### Files which must be added
 
