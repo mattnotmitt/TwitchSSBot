@@ -82,3 +82,5 @@ subs.txt
 pastSteamIDs.txt
 
 login.json
+
+__pycache__
