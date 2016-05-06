@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
-import re, time, socket, gspread, asyncio, argparse, json, time
-from urllib.request import urlopen
-from urllib.error import URLError
-from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime
+import socket
 from genFunc import *
 # --------------------------------------------- Start Settings ----------------------------------------------------
 HOST = "irc.twitch.tv"# Hostname of the IRC-Server in this case twitch's
