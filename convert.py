@@ -1,9 +1,6 @@
-import gspread
-import asyncio
-import argparse
+import gspread, asyncio, json
 from urllib.request import urlopen
 from urllib.error import URLError
-import json
 from oauth2client.service_account import ServiceAccountCredentials
 banned=['N/A','0']
 sheet=input("Which sheet?")
