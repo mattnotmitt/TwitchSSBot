@@ -4,7 +4,7 @@ from genFunc import *
 
 worksheetName=dateNow()
 scope = ['https://spreadsheets.google.com/feeds']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('home/ec2-user/onscoinbot/auth.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('auth.json', scope)
 gc = gspread.authorize(credentials)
 wks = gc.open_by_key(fetchKey("sheetKey"))
 wks.add_worksheet(worksheetName, 500, 20)
@@ -23,5 +23,5 @@ cs.update_acell('L3', 'Average Today:')
 cs.update_acell('M3', '=M2/M4')
 cs.update_acell('L4', 'Subs Today:')
 cs.update_acell('M4', '=count(B2:B)')
-with open('home/ec2-user/onscoinbot/line.txt','w') as lineNum:
+with open('line.txt','w') as lineNum:
         lineNum.write('2')

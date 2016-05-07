@@ -1,5 +1,6 @@
 var irc = require("tmi.js");
 var fs = require("fs")
+var logins = JSON.parse(fs.readFileSync('login.json', 'utf8'));
 var options = {
     options: {
         debug: true
@@ -9,14 +10,13 @@ var options = {
         reconnect: true
     },
     identity: {
-        username: "xxxxxxxxxx",
-        password: "oauth:xxxxxxxxxxx"
+        username: logins.twitchUser,
+        password: logins.twitchOAuth
     },
-    channels: ["#onscreenlol"]
+    channels: [logins.twitchChannel]
 };
 
 var client = new irc.client(options);
-
 // Connect the client to the server..
 client.connect();
 client.on("subanniversary", function (channel, username, months) {

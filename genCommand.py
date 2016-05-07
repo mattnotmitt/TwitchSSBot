@@ -37,7 +37,9 @@ while True:
                             subs.write(twitchUser+"\n")
                         send_message(CHAN,"/w artemisbot User added to spreadsheet.",con)
                     elif line[3]==':!querysay':
-                        send_message(CHAN,message[10:],con)            
+                        send_message(CHAN,message[10:],con)     
+                    elif line[3]==':!getsteam':
+                        send_message(CHAN,("/me "+sender+" the user "+line[4]+" has steam ID "+check_userID(line[4])),con) 
 
     except socket.error:
         print("Socket died")
