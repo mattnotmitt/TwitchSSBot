@@ -85,4 +85,8 @@ login.json
 
 __pycache__
 
+<<<<<<< HEAD
 .gitignore
+=======
+.gitignore
+>>>>>>> 070e3f14adf60108e75487b23babef4b9979c0af
