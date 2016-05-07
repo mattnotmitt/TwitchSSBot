@@ -86,3 +86,5 @@ login.json
 __pycache__
 
 .gitignore
+
+sub-logs

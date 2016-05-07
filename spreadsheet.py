@@ -42,9 +42,10 @@ while True:
         timeCell=str("F"+str(i))
         sentCell=str("D"+str(i))
         reasonCell=str("E"+str(i))
-        f = open("subs.txt","r")
-        lines = f.readlines()
-        f.close()
+        with open("subs.txt","r") as f:
+          lines = f.readlines()
+        with open("subs.txt","w") as f:
+          f.write("")
         while len(lines)>0:
             rawTwitchUser = lines[0]
             twitchUser = rawTwitchUser[:-1]
@@ -83,11 +84,6 @@ while True:
             i=i+1
             with open('line.txt', 'w') as lineNum:
                 lineNum.write(str(i))
-            f = open("subs.txt","w")
-            for updateLine in lines:
-              if updateLine!=rawTwitchUser:
-                f.write(updateLine)
-            f.close()
             lines.pop(0)
         loops=loops+1
         time.sleep(2)
