@@ -45,7 +45,7 @@ while True:
         f = open("subs.txt","r")
         lines = f.readlines()
         f.close()
-        if len(lines)>0:
+        while len(lines)>0:
             rawTwitchUser = lines[0]
             twitchUser = rawTwitchUser[:-1]
             worksheet.update_acell(twitchUserCell, twitchUser)
@@ -88,6 +88,7 @@ while True:
               if updateLine!=rawTwitchUser:
                 f.write(updateLine)
             f.close()
+            lines.pop(0)
         loops=loops+1
         time.sleep(2)
         if loops==100:
