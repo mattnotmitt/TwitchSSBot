@@ -1,9 +1,6 @@
 var irc = require("tmi.js");
 var fs = require("fs")
-<<<<<<< HEAD
 var logins = JSON.parse(fs.readFileSync('login.json', 'utf8'));
-=======
->>>>>>> 070e3f14adf60108e75487b23babef4b9979c0af
 var options = {
     options: {
         debug: true
@@ -13,7 +10,6 @@ var options = {
         reconnect: true
     },
     identity: {
-<<<<<<< HEAD
         username: logins.twitchUser,
         password: logins.twitchOAuth
     },
@@ -21,16 +17,6 @@ var options = {
 };
 
 var client = new irc.client(options);
-=======
-        username: "onscoinbot",
-        password: "oauth:xxxxxxxxxxx"
-    },
-    channels: ["#onscreenlol"]
-};
-
-var client = new irc.client(options);
-
->>>>>>> 070e3f14adf60108e75487b23babef4b9979c0af
 // Connect the client to the server..
 client.connect();
 client.on("subanniversary", function (channel, username, months) {
@@ -42,8 +28,4 @@ client.on("subscription", function (channel, username) {
     console.log(username);
 		fs.appendFile('subs.txt', username + "\n", function (err) {
 		});
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 070e3f14adf60108e75487b23babef4b9979c0af
