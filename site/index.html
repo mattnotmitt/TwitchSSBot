@@ -1,0 +1,86 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="http://cdn.tmijs.org/js/latest/tmi.js"></script>
+		<script src="http://code.jquery.com/jquery.min.js"></script>
+		<script>
+		    function removeElement(parentDiv, childDiv){
+				 if (childDiv == parentDiv) {
+					  console.log("The parent div cannot be removed.");
+				 }
+				 else if (document.getElementById(childDiv)) {     
+					  var child = document.getElementById(childDiv);
+					  console.log(child);
+					  var parent = document.getElementById(parentDiv);
+					  console.log(parent);
+					  parent.removeChild(child);
+				 }
+				 else {
+					  console.log("Child div has already been removed or does not exist.");
+					  return false;
+				 }
+			}
+		</script>
+		<meta charset="UTF-8">
+		<title>Roll Output for ONSCREENlol</title>
+	</head>
+	<body style="position: relative;">
+		<div id="gifContain" style="width:500px;height:250px;"></div>
+		<div id="nameContain" style="position: absolute;top: -12px;left: 0px;width:500px;height:260px"><p id='sub-name' style='font-family: sub-text;color: #fff;font-weight: bold;font-size:20px;text-align:center'></p><p id='fail-msg' style='font-family: sub-text;color: #fff;font-weight: bold;font-size:30px;text-shadow:-1px -1px 0 #f00,1px -1px 0 #f00,-1px 1px 0 #f00,1px 1px 0 #f00;text-align:right;padding-right:20px'></p></div>
+		<script>
+			var options = {
+				options: {
+					debug: true
+				},
+				connection: {
+					cluster: "aws",
+					reconnect: true
+				},
+				channels: ["#onscoinbot"]
+			};
+
+			var client = new irc.client(options);
+			$("#sub\\-name").fadeOut();
+			$("#gifContain").fadeOut();
+			$("#fail\\-msg").fadeOut();
+			// Connect the client to the server..
+			client.connect();
+			client.on("chat", function (channel, user, message, self) {
+				var name = user.username;
+				console.log(name);
+				if (name=="artemisbot" || name=="onscreenlol") {
+					console.log("I spoke.")
+					mesArray=message.split(" ");
+					if (mesArray[0]=="!coins") {
+						console.log("Coin command received.");
+						document.getElementById("gifContain").innerHTML="<img id='rmMe' src='img/"+mesArray[1]+".gif' alt='coins' style='background-color:#fff'>";
+						document.getElementById("sub-name").innerHTML="Rolling for "+mesArray[2];
+						$("#gifContain").fadeIn(550);
+						$("#sub\\-name").fadeIn(550);
+						setTimeout(function() {
+							$("#rmMe").fadeOut(1250);
+							$("#sub\\-name").fadeOut(1250, function(){
+								removeElement("gifContain","rmMe");
+								document.getElementById('sub-name').innerHTML = "";	
+								window.location.reload();
+							});
+						}, (9 * 1000));
+					}
+					else if (mesArray[0]=="!fail") {
+						document.getElementById("fail-msg").innerHTML=mesArray[1]+" does not meet requirements for roll.";
+						$("#fail\\-msg").fadeIn(500);
+						setTimeout(function() {
+							$("#fail\\-msg").fadeOut(500, function(){
+								document.getElementById('fail-msg').innerHTML = "";
+								window.location.reload();
+							});
+						}, (5 * 1000));
+					}
+					else if (mesArray[0]=="!reload") {
+						window.location.reload();
+					};
+				}
+			});
+		</script>
+	</body>
+</html>
