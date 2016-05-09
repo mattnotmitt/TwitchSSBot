@@ -1,13 +1,7 @@
 import socket, gspread, time, random
 from oauth2client.service_account import ServiceAccountCredentials
 from genFunc import *
-# --------------------------------------------- Start Settings ----------------------------------------------------
-HOST = "irc.twitch.tv"# Hostname of the IRC-Server in this case twitch's
-PORT = 6667 # Default IRC-Port
-CHAN = "#onscoinbot"
-NICK = fetchKey("altTwitchUser")
-PASS = fetchKey("altTwitchOAuth")
-# --------------------------------------------- End Settings -------------------------------------------------------
+
 print("Credentials being auth")
 loops=0
 scope = ['https://spreadsheets.google.com/feeds']
