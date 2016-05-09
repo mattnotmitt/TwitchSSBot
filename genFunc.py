@@ -1,4 +1,4 @@
-import re, time, socket, gspread, asyncio, argparse, json, os
+import re, time, socket, gspread, asyncio, argparse, json, os,random
 from urllib.request import urlopen
 from urllib.error import URLError
 from oauth2client.service_account import ServiceAccountCredentials
@@ -54,7 +54,7 @@ def get_message(msg):
 # --------------------------------------------- End Helper Functions -----------------------------------------------
 # --------------------------------------------- Main Functions -----------------------------------------------------
 def roll_coins():
-  coinChoices=["100k","2k","0","4k","5k","0","1k","1k","0","4k","2k","0","2k","5k","0","1k","4k","50k","0","1k","5k","0","3k","5k","0","5k","5k","0","25k","3k","0","5k","10k","0","5k","3k","0","3k","3k","10k","0","5k","4k","0","5k","2k","4k","0","2k","1k"]
+  coinChoices=["100","2","0","4","5","0","1","1","0","4","2","0","2","5","0","1","4","50","0","1","5","0","3","5","0","5","5","0","25","3","0","5","10","0","5","3","0","3","3","10","0","5","4","0","5","2","4","0","2","1"]
   coins=coinChoices[random.randint(0,49)]
   return(coins)
 
@@ -110,3 +110,39 @@ def fetchKey(key):
   response = str(keys[key])
   print(response)
   return response
+
+def check_user(user):
+    """ returns 0: online, 1: offline, 2: not found, 3: error """
+    url = 'https://api.twitch.tv/kraken/streams/' + user
+    try:
+        info = json.loads(urlopen(url, timeout = 15).read().decode('utf-8'))
+        if info['stream'] == None:
+            status = 1
+        else:
+            status = 0
+    except URLError as e:
+        if e.reason == 'Not Found' or e.reason == 'Unprocessable Entity':
+            status = 2
+        else:
+            status = 3
+    return status
+
+def cmdSend(coins, twitchUser, fail, reason):
+  con = socket.socket()
+  con.connect(("irc.twitch.tv", 6667))
+  send_pass(fetchKey("altTwitchOAuth"),con)
+  send_nick(fetchKey("altTwitchUser"),con)
+  join_channel("#onscoinbot",con)
+  join_channel("#onscreenlol",con)
+  if fail==False:
+    send_message("#onscoinbot",('!coins '+coins+" "+twitchUser),con)
+    if check_user('onscreenlol')==1:
+      if coins!="0":
+        send_message("#onscreenlol",(twitchUser+" won "+coins+"k CSGODouble Coins."),con)
+      else:
+        send_message("#onscreenlol",(twitchUser+" won "+coins+" CSGODouble Coins. FeelsBadMan"),con)
+  elif fail == True:
+    send_message("#onscoinbot",('!fail '+ twitchUser),con)
+    if check_user('onscreenlol')==1:
+      send_message("#onscreenlol",(twitchUser+" does not qualify for CSGODouble coins. Reason: "+reason),con)
+  con.close()

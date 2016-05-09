@@ -2,18 +2,11 @@ import gspread, asyncio, json
 from urllib.request import urlopen
 from urllib.error import URLError
 from oauth2client.service_account import ServiceAccountCredentials
+from genFunc import *
 banned=['N/A','0']
 sheet=input("Which sheet?")
 i=int(input("From what line?"))
 double=input("Double commands?")
-def check_userID(user):
-    url = 'https://api.twitch.tv/api/channels/' + user
-    try:
-        info = json.loads(urlopen(url, timeout = 15).read().decode('utf-8'))
-        return info['steam_id']
-    except URLError as e:
-        return 'User Not Found in Twitch Database'
-print("Credentials being auth")
 scope = ['https://spreadsheets.google.com/feeds']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('auth.json', scope)
 gc = gspread.authorize(credentials)

@@ -1,21 +1,13 @@
-import socket, gspread, time
+import socket, gspread, time, random
 from oauth2client.service_account import ServiceAccountCredentials
 from genFunc import *
 # --------------------------------------------- Start Settings ----------------------------------------------------
 HOST = "irc.twitch.tv"# Hostname of the IRC-Server in this case twitch's
 PORT = 6667 # Default IRC-Port
-CHAN = fetchKey("twitchChannel")
+CHAN = "#onscoinbot"
 NICK = fetchKey("altTwitchUser")
 PASS = fetchKey("altTwitchOAuth")
 # --------------------------------------------- End Settings -------------------------------------------------------
-
-'''
-con = socket.socket()
-con.connect((HOST, PORT))
-send_pass(PASS,con)
-send_nick(NICK,con)
-join_channel(CHAN,con)
-'''
 print("Credentials being auth")
 loops=0
 scope = ['https://spreadsheets.google.com/feeds']
@@ -36,17 +28,22 @@ while True:
     worksheet = wks.worksheet(dateNow())
     lastSub=''
     while loops<100:
-        twitchUserCell=str("A"+str(i))
-        steamUserCell=str("C"+str(i))
-        coinCell=str("B"+str(i))
-        timeCell=str("F"+str(i))
-        sentCell=str("D"+str(i))
-        reasonCell=str("E"+str(i))
         with open("subs.txt","r") as f:
           lines = f.readlines()
         with open("subs.txt","w") as f:
           f.write("")
         while len(lines)>0:
+            print(lines)
+            print(i)
+            i=i+1
+            with open('line.txt', 'w') as lineNum:
+              lineNum.write(str(i))
+            twitchUserCell=str("A"+str(i))
+            steamUserCell=str("C"+str(i))
+            coinCell=str("B"+str(i))
+            timeCell=str("F"+str(i))
+            sentCell=str("D"+str(i))
+            reasonCell=str("E"+str(i))
             rawTwitchUser = lines[0]
             twitchUser = rawTwitchUser[:-1]
             worksheet.update_acell(twitchUserCell, twitchUser)
@@ -66,27 +63,36 @@ while True:
                   worksheet.update_acell(sentCell, "No")
                   worksheet.update_acell(reasonCell, csgoCheck)
                   worksheet.update_acell(coinCell, "N/A")
-                """else:
                   coinGen=roll_coins()
-                  send_message(CHAN,('/w onscreenbot !coins'+coinGen+" "+twitchUser),con)
-                  worksheet.update_acell(coinCell,coinGen)
-                  """
+                  cmdSend("n/a", twitchUser, True, csgoCheck)
+                  time.sleep(7)
+                else:
+                  coinGen=roll_coins()
+                  cmdSend(coinGen, twitchUser, False, "n/a")
+                  if coinGen=="0":
+                     worksheet.update_acell(coinCell,coinGen)
+                  else:
+                     worksheet.update_acell(coinCell,coinGen+"000")
+                  with open('testing.txt', 'a') as tester:
+                    tester.write(twitchUser+" "+coinGen+"\n")
+                  time.sleep(12)
               else:
                 worksheet.update_acell(sentCell, "No")
                 worksheet.update_acell(reasonCell, "Steam account used before.")
                 worksheet.update_acell(coinCell, "N/A")
                 worksheet.update_acell(steamUserCell, steamUser)
+                cmdSend("n/a", twitchUser, True, "Steam account used before.")
+                time.sleep(7)
             else:
               worksheet.update_acell(steamUserCell, 'Steam not linked.')
               worksheet.update_acell(coinCell, 'N/A')
               worksheet.update_acell(sentCell, 'No')
               worksheet.update_acell(reasonCell, 'Steam and Twitch not linked.')
-            i=i+1
-            with open('line.txt', 'w') as lineNum:
-                lineNum.write(str(i))
+              cmdSend("n/a", twitchUser, True, 'Steam and Twitch not linked.')
+              time.sleep(7)
             lines.pop(0)
         loops=loops+1
-        time.sleep(2)
+        time.sleep(1)
         if loops==100:
             newRun=True
         
