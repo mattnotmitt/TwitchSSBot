@@ -69,7 +69,7 @@ while True:
                      worksheet.update_acell(coinCell,coinGen+"000")
                   with open('testing.txt', 'a') as tester:
                     tester.write(twitchUser+" "+coinGen+"\n")
-                  time.sleep(12)
+                  time.sleep(15)
               else:
                 worksheet.update_acell(sentCell, "No")
                 worksheet.update_acell(reasonCell, "Steam account used before.")

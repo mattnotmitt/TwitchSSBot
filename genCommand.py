@@ -3,8 +3,8 @@ from genFunc import *
 HOST = "irc.twitch.tv"# Hostname of the IRC-Server in this case twitch's
 PORT = 6667 # Default IRC-Port
 CHAN = fetchKey("twitchChannel")
-NICK = fetchKey("twitchUser")
-PASS = fetchKey("twitchOAuth")
+NICK = fetchKey("altTwitchUser")
+PASS = fetchKey("altTwitchOAuth")
 # --------------------------------------------- End Settings -------------------------------------------------------
 con = socket.socket()
 con.connect((HOST, PORT))
@@ -12,7 +12,7 @@ send_pass(PASS,con)
 send_nick(NICK,con)
 join_channel(CHAN,con)
 data = ""
-mods = ['artemisbot','deelmo','artemisbot','zashgamer','onscreenlol']
+mods = ['artemisbot','deelmo','artemisbot','zashgamer','onscreenlol','ilkleytom','essail']
 while True:
     try:
         
@@ -29,8 +29,7 @@ while True:
                 sender = get_sender(line[0])
                 print(message)
                 print(sender)
-                print(line)
-                if sender in mods:
+                if sender.lower() in mods:
                     if line[3]==':!append':
                         twitchUser=line[4]
                         with open('subs.txt', 'a') as subs:
@@ -39,7 +38,17 @@ while True:
                     elif line[3]==':!querysay':
                         send_message(CHAN,message[10:],con)     
                     elif line[3]==':!getsteam':
-                        send_message(CHAN,("/me "+sender+" the user "+line[4]+" has steam ID "+check_userID(line[4])),con) 
+                        send_message(CHAN,("/me "+sender+" the user "+line[4]+" has steam ID "+check_userID(line[4])),con)
+                    """elif line[3]==':!coinwins':
+                        if len(line)> 4:
+                          wonCoins=coinCheck(line[4])
+                          send_message(CHAN,("/me "+sender+", the user "+line[4]+" has received coins "+ str(len(wonCoins)) + " time(s), of values "+(', '.join(map(str, wonCoins)))+"."),con)
+                        else:
+                          wonCoins=coinCheck(sender)
+                          send_message(CHAN,("/me "+sender+", you have received coins "+ str(len(wonCoins)) + " time(s), of values "+(', '.join(map(str, wonCoins)))+"."),con)"""
+                elif line[3]==':!coinwins':
+                  wonCoins=coinCheck(sender)
+                  send_message(CHAN,("/me "+sender+", you have received coins "+ str(len(wonCoins)) + " time(s), of values "+(', '.join(map(str, wonCoins)))+"."),con)
 
     except socket.error:
         print("Socket died")

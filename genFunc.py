@@ -33,13 +33,13 @@ def part_channel(chan, con):
 def get_sender(msg):
     result = ""
     for char in msg:
-        print(char)
         if char == "!":
             break
         if char != ":":
             result = result + char
-    return result
-
+    url = 'https://api.twitch.tv/api/channels/' + result
+    info = json.loads(urlopen(url, timeout = 15).read().decode('utf-8'))
+    return info["display_name"]
 
 def get_message(msg):
     result = ""
@@ -108,7 +108,6 @@ def fetchKey(key):
   with open('login.json') as key_file:    
     keys = json.loads(key_file.read())
   response = str(keys[key])
-  print(response)
   return response
 
 def check_user(user):
@@ -146,3 +145,32 @@ def cmdSend(coins, twitchUser, fail, reason):
     if check_user('onscreenlol')==1:
       send_message("#onscreenlol",(twitchUser+" does not qualify for CSGODouble coins. Reason: "+reason),con)
   con.close()
+
+def sheetAuth(sheet):
+  scope = ['https://spreadsheets.google.com/feeds']
+  credentials = ServiceAccountCredentials.from_json_keyfile_name('auth.json', scope)
+  gc = gspread.authorize(credentials)
+  wks = gc.open_by_key(fetchKey("sheetKey"))
+  worksheet = wks.worksheet(sheet)
+  return worksheet
+
+def coinCheck(user, num="all"):
+  i=0
+  wonList=[]
+  worksheet=sheetAuth("All subs")
+  coinsWon=worksheet.findall(user)
+  timesRolled=len(coinsWon)-1
+  if timesRolled<0:
+    coinsWon=worksheet.findall(user.lower())
+    timesRolled=len(coinsWon)-1
+  if num=="all":
+    while i <= timesRolled:
+      won=worksheet.cell(coinsWon[i].row, 2).value
+      wonList.append(won)
+      i+=1
+  else:
+    while i <= num:
+      won=worksheet.cell((coinsWon[i].row), 2).value
+      wonList.append(won)
+      i+=1
+  return wonList

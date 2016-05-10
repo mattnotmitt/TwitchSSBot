@@ -7,13 +7,7 @@ banned=['N/A','0']
 sheet=input("Which sheet?")
 i=int(input("From what line?"))
 double=input("Double commands?")
-scope = ['https://spreadsheets.google.com/feeds']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('auth.json', scope)
-gc = gspread.authorize(credentials)
-print("Connecting!")
-wks = gc.open_by_key(fetchKey("sheetKey"))
-worksheet = wks.worksheet(sheet)
-print("Connected")
+worksheet = sheetAuth(sheet)
 print(worksheet.row_count)
 while True:
     twitchCell=str('A' + str(i))
@@ -22,7 +16,7 @@ while True:
     completeCell=str('D' + str(i))
     commandCell=str('G' + str(i))
     user=worksheet.acell(twitchCell).value
-    steam64=check_userID(user)
+    steam64=worksheet.acell(steamCell).value
     print(user)
     if worksheet.acell(twitchCell).value != '':
         if worksheet.acell(coinCell).value not in banned:
