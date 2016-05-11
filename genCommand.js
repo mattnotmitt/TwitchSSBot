@@ -32,9 +32,14 @@ var client = new irc.client(options);
 // Connect the client to the server..
 client.connect();
 client.on("chat", function (channel, user, message, self) {
+		console.log(user.subscriber);
+		var username=user['display-name'];
+	  if (username==null){
+			username=user.username
+		}
 		if (user['user-type'] == "mod"){
 			mesArray=message.split(" ");
-			var username=mesArray[1]
+			username=mesArray[1]
 			if (mesArray[0]=="!append") {
 				fs.appendFile('subs.txt', username + "\n", function (err) {
 				});
@@ -59,11 +64,35 @@ client.on("chat", function (channel, user, message, self) {
 				}
 				pythonCon(username, 'coinWins', function(pythData){
 					console.log(pythData);
-					if (mesArray.length > 1){
-						client.action(options.channels[0], user['display-name']+", "+username+" has won "+pythData+" CSGODouble coins.");
+					if (mesArray.length > 1) {
+					 if (pythData == "None") {
+					  client.action(options.channels[0], user['display-name']+", "+username+" has been rolled for no CSGODouble coins.");
+					 }
+					 else {
+						 client.action(options.channels[0], user['display-name']+", "+username+" has won "+pythData+" CSGODouble coins.");
+						}
 					}
 					else {
-						client.action(options.channels[0], user['display-name']+", you have won "+pythData+" CSGODouble coins.");
+					 if (pythData == "None") {
+					  client.action(options.channels[0], user['display-name']+", you have been rolled for no CSGODouble coins.");
+					 }
+					 else {
+						 client.action(options.channels[0], user['display-name']+", you have won "+pythData+" CSGODouble coins.");
+						}
+					}
+				});
+			}
+		}
+		else if(user.subscriber===true){
+			mesArray=message.split(" ");
+			console.log(username);
+			if (mesArray[0]=="!coinwins") {
+				pythonCon(username, 'coinWins', function(pythData){
+					if (pythData == "None") {
+						client.whisper(username,"You have been rolled for no CSGODouble coins.");
+					}
+					else {
+						client.whisper(username,"You have won "+pythData+" CSGODouble coins.");
 					}
 				});
 			}

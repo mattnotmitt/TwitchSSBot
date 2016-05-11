@@ -82,8 +82,8 @@ def dateNow():
     return full
 
 def checkCSGO(steamID):
-    info = json.loads(urlopen("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001?key=E6B9BEF1975FF027CD07A6BBE9C04D7B&steamid="+steamID, timeout=15).read().decode('utf-8'))
     try:
+        info = json.loads(urlopen("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001?key=E6B9BEF1975FF027CD07A6BBE9C04D7B&steamid="+steamID, timeout=60).read().decode('utf-8'))
         csgoDict=(info['response'])['games']
         ownGame = (next((item for item in csgoDict if item["appid"] == 730), "Doesn't Own"))
         if ownGame!="Doesn't Own":
@@ -96,6 +96,8 @@ def checkCSGO(steamID):
             return("Doesn't own CSGO.")
     except KeyError:
         return("Private Profile/Family Shared CSGO.")
+    except socket.timeout:
+        return("Steam Connection Timed Out.")
 
 def is_number(s):
     try:
@@ -141,7 +143,7 @@ def cmdSend(coins, twitchUser, fail, reason):
       else:
         send_message("#onscreenlol",(twitchUser+" won "+coins+" CSGODouble Coins. FeelsBadMan"),con)
   elif fail == True:
-    send_message("#onscoinbot",('!fail '+ twitchUser),con)
+    send_message("#onscoinbot",('!fail '+ twitchUser + ' ' + reason),con)
     if check_user('onscreenlol')==1:
       send_message("#onscreenlol",(twitchUser+" does not qualify for CSGODouble coins. Reason: "+reason),con)
   con.close()
@@ -173,4 +175,7 @@ def coinCheck(user, num="all"):
       won=worksheet.cell((coinsWon[i].row), 2).value
       wonList.append(won)
       i+=1
-  return wonList
+  if len(wonList) == 0:
+    return "False"
+  else:
+    return wonList

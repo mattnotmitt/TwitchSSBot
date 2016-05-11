@@ -59,7 +59,7 @@ while True:
                   worksheet.update_acell(coinCell, "N/A")
                   coinGen=roll_coins()
                   cmdSend("n/a", twitchUser, True, csgoCheck)
-                  time.sleep(7)
+                  time.sleep(10)
                 else:
                   coinGen=roll_coins()
                   cmdSend(coinGen, twitchUser, False, "n/a")
@@ -69,21 +69,21 @@ while True:
                      worksheet.update_acell(coinCell,coinGen+"000")
                   with open('testing.txt', 'a') as tester:
                     tester.write(twitchUser+" "+coinGen+"\n")
-                  time.sleep(15)
+                  time.sleep(20)
               else:
                 worksheet.update_acell(sentCell, "No")
                 worksheet.update_acell(reasonCell, "Steam account used before.")
                 worksheet.update_acell(coinCell, "N/A")
                 worksheet.update_acell(steamUserCell, steamUser)
                 cmdSend("n/a", twitchUser, True, "Steam account used before.")
-                time.sleep(7)
+                time.sleep(10)
             else:
               worksheet.update_acell(steamUserCell, 'Steam not linked.')
               worksheet.update_acell(coinCell, 'N/A')
               worksheet.update_acell(sentCell, 'No')
               worksheet.update_acell(reasonCell, 'Steam and Twitch not linked.')
               cmdSend("n/a", twitchUser, True, 'Steam and Twitch not linked.')
-              time.sleep(7)
+              time.sleep(10)
             lines.pop(0)
         loops=loops+1
         time.sleep(1)

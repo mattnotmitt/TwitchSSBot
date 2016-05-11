@@ -53,7 +53,7 @@
 					mesArray=message.split(" ");
 					if (mesArray[0]=="!coins") {
 						console.log("Coin command received.");
-						document.getElementById("gifContain").innerHTML="<img id='rmMe' src='img/"+mesArray[1]+".gif' alt='coins' style='background-color:#fff'>";
+						document.getElementById("gifContain").innerHTML="<img id='rmMe' src='img/"+mesArray[1]+".gif?"+Math.random()+"' >";
 						document.getElementById("sub-name").innerHTML="Rolling for "+mesArray[2];
 						$("#gifContain").fadeIn(550);
 						$("#sub\\-name").fadeIn(550);
@@ -64,10 +64,10 @@
 								document.getElementById('sub-name').innerHTML = "";	
 								window.location.reload();
 							});
-						}, (9 * 1000));
+						}, (7.5 * 1000));
 					}
 					else if (mesArray[0]=="!fail") {
-						document.getElementById("fail-msg").innerHTML=mesArray[1]+" does not meet requirements for roll.";
+						document.getElementById("fail-msg").innerHTML=mesArray[1]+" does not meet requirements for roll. Reason: "+mesArray.slice(2).join(' ');
 						$("#fail\\-msg").fadeIn(500);
 						setTimeout(function() {
 							$("#fail\\-msg").fadeOut(500, function(){

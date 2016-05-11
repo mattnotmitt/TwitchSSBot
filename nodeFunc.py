@@ -6,5 +6,8 @@ def callFunc():
 		print(check_userID(user))
 	elif func=="coinWins":
 		wonCoins=coinCheck(user)
-		print((', '.join(map(str, wonCoins))))
+		if wonCoins=="False":
+		 print("None")
+		else:
+		 print((', '.join(map(str, wonCoins))))
 callFunc()
