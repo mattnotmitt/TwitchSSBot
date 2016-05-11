@@ -12,6 +12,7 @@ $ pip install gspread
 $ pip install oauth2
 $ pip install oauth2client
 $ npm install twitch_irc
+$ npm install python-shell
 ```
 ### Files which must be added
 
