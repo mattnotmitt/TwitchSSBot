@@ -19,13 +19,11 @@ var options = {
 var client = new irc.client(options);
 // Connect the client to the server..
 client.connect();
-client.on("subanniversary", function (channel, username, months) {
+client.on("subanniversary", function(channel, username, months) {
     console.log(username);
-		fs.appendFile('subs.txt', username + "\n", function (err) {
-		});
+    fs.appendFile('subs.txt', username + "\n", function(err) {});
 });
-client.on("subscription", function (channel, username) {
+client.on("subscription", function(channel, username) {
     console.log(username);
-		fs.appendFile('subs.txt', username + "\n", function (err) {
-		});
+    fs.appendFile('subs.txt', username + "\n", function(err) {});
 });

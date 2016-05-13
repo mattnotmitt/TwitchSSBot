@@ -3,9 +3,9 @@ var fs = require("fs")
 
 var today = new Date();
 var dd = today.getDate();
-var mm = today.getMonth()+1; //January is 0!
+var mm = today.getMonth() + 1; //January is 0!
 var yyyy = today.getFullYear();
-today = dd+'-'+mm+'-'+yyyy;
+today = dd + '-' + mm + '-' + yyyy;
 var logins = JSON.parse(fs.readFileSync('login.json', 'utf8'));
 var options = {
     options: {
@@ -25,14 +25,11 @@ var options = {
 var client = new irc.client(options);
 // Connect the client to the server..
 client.connect();
-client.on("subanniversary", function (channel, username, months) {
+client.on("subanniversary", function(channel, username, months) {
     console.log(username);
-		fs.appendFile('sub-logs/'+today+'.txt', username + "\n", function (err) {
-		});
+    fs.appendFile('sub-logs/' + today + '.txt', username + "\n", function(err) {});
 });
-client.on("subscription", function (channel, username) {
+client.on("subscription", function(channel, username) {
     console.log(username);
-		fs.appendFile('sub-logs/'+today+".txt", username + "\n", function (err) {
-		});
+    fs.appendFile('sub-logs/' + today + ".txt", username + "\n", function(err) {});
 });
-
