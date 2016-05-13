@@ -68,8 +68,6 @@ while True:
                             worksheet.update_acell(coinCell, coinGen)
                         else:
                             worksheet.update_acell(coinCell, coinGen + "000")
-                        with open('testing.txt', 'a') as tester:
-                            tester.write(twitchUser + " " + coinGen + "\n")
                         time.sleep(20)
                 else:
                     worksheet.update_acell(sentCell, "No")
