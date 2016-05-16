@@ -13,7 +13,7 @@ var options = {
         username: logins.twitchUser,
         password: logins.twitchOAuth
     },
-    channels: [logins.twitchChannel]
+    channels: logins.twitchChannel
 };
 
 var client = new irc.client(options);

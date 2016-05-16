@@ -80,7 +80,7 @@ def check_userID(user):
 def timeGet():
     os.environ['TZ'] = 'GB'
     time.tzset()
-    timeRtNow = time.strftime('%X %x %Z')
+    timeRtNow = time.strftime('%X %Z %d/%m/%y')
     return timeRtNow
 
 
@@ -159,23 +159,23 @@ def cmdSend(coins, twitchUser, fail, reason):
     join_channel("#onscoinbot", con)
     join_channel("#onscreenlol", con)
     if fail == False:
-        send_message("#onscoinbot",
-                     ('!coins ' + coins + " " + twitchUser), con)
+        send_message("#onscoinbot", ('!coins ' + coins + " " + twitchUser),
+                     con)
         if check_user('onscreenlol') == 1:
             if coins != "0":
-                send_message("#onscreenlol", (
-                    twitchUser + " won " + coins + "k CSGODouble Coins."), con)
-            else:
                 send_message("#onscreenlol",
-                             (twitchUser + " won " + coins +
-                              " CSGODouble Coins. FeelsBadMan"), con)
+                             ("/me " + twitchUser + " won " + coins +
+                              "k CSGODouble Coins."), con)
+            else:
+                send_message("#onscreenlol", "/me " + twitchUser + " won " +
+                             coins + " CSGODouble Coins. FeelsBadMan", con)
     elif fail == True:
-        send_message("#onscoinbot",
-                     ('!fail ' + twitchUser + ' ' + reason), con)
+        send_message("#onscoinbot", '!fail ' + twitchUser + ' ' + reason, con)
         if check_user('onscreenlol') == 1:
-            send_message("#onscreenlol", (
-                twitchUser + " does not qualify for CSGODouble coins. Reason: "
-                + reason), con)
+            send_message("#onscreenlol",
+                         ("/me" + twitchUser +
+                          " does not qualify for CSGODouble coins. Reason: " +
+                          reason), con)
     con.close()
 
 

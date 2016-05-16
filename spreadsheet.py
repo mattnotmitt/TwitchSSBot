@@ -1,7 +1,7 @@
 import socket, gspread, time, random
 from oauth2client.service_account import ServiceAccountCredentials
 from genFunc import *
-
+import datetime
 print("Credentials being auth")
 loops = 0
 scope = ['https://spreadsheets.google.com/feeds']
@@ -51,9 +51,6 @@ while True:
                 if rawSteamUser not in pastSteamIDs:
                     worksheet.update_acell(steamUserCell, steamUser)
                     csgoCheck = checkCSGO(steamUser)
-                    pastSteamIDs.append(rawSteamUser)
-                    with open("pastSteamIDs.txt", 'a') as pastIDs:
-                        pastIDs.write(rawSteamUser)
                     if csgoCheck != "Eligible for Roll.":
                         worksheet.update_acell(sentCell, "No")
                         worksheet.update_acell(reasonCell, csgoCheck)
@@ -68,15 +65,18 @@ while True:
                             worksheet.update_acell(coinCell, coinGen)
                         else:
                             worksheet.update_acell(coinCell, coinGen + "000")
+                        pastSteamIDs.append(rawSteamUser)
+                        with open("pastSteamIDs.txt", 'a') as pastIDs:
+                            pastIDs.write(rawSteamUser)
                         time.sleep(20)
                 else:
                     worksheet.update_acell(sentCell, "No")
                     worksheet.update_acell(reasonCell,
-                                           "Steam account used before.")
+                                           "Steam account used since 1st "+mydate.strftime("%B"))
                     worksheet.update_acell(coinCell, "N/A")
                     worksheet.update_acell(steamUserCell, steamUser)
                     cmdSend("n/a", twitchUser, True,
-                            "Steam account used before.")
+                            "Steam account used since 1st "+mydate.strftime("%B"))
                     time.sleep(10)
             else:
                 worksheet.update_acell(steamUserCell, 'Steam not linked.')

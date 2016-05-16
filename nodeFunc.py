@@ -1,6 +1,6 @@
 from genFunc import *
-
-
+import datetime
+mydate = datetime.datetime.now()
 def callFunc():
     func = input()
     user = input()
@@ -17,7 +17,7 @@ def callFunc():
         if response == "Eligible for Roll.":
             steamList = steamBefore(check_userID(user))
             if steamList == True:
-                print("Steam account used before.")
+                print("Steam account used since 1st "+mydate.strftime("%B"))
             elif steamList == False:
                 print(response)
         else:

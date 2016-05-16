@@ -19,7 +19,7 @@ var options = {
         username: logins.twitchUser,
         password: logins.twitchOAuth
     },
-    channels: [logins.twitchChannel]
+    channels: logins.twitchChannel
 };
 
 var client = new irc.client(options);
@@ -27,7 +27,7 @@ var client = new irc.client(options);
 client.connect();
 client.on("subanniversary", function(channel, username, months) {
     console.log(username);
-    fs.appendFile('sub-logs/' + today + '.txt', username + "\n", function(err) {});
+    fs.appendFile('sub-logs/' + today + '.txt', username + " " + months + "\n", function(err) {});
 });
 client.on("subscription", function(channel, username) {
     console.log(username);
