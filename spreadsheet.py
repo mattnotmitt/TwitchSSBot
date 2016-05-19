@@ -2,6 +2,7 @@ import socket, gspread, time, random
 from oauth2client.service_account import ServiceAccountCredentials
 from genFunc import *
 import datetime
+mydate = datetime.datetime.now()
 print("Credentials being auth")
 loops = 0
 scope = ['https://spreadsheets.google.com/feeds']
@@ -21,6 +22,7 @@ while True:
     print("Connecting!")
     wks = gc.open_by_key(fetchKey("sheetKey"))
     worksheet = wks.worksheet(dateNow())
+    #worksheet = wks.worksheet('sheetnamehere')
     lastSub = ''
     while loops < 100:
         with open("subs.txt", "r") as f:

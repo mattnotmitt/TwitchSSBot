@@ -33,10 +33,7 @@ var client = new irc.client(options);
 client.connect();
 client.on("chat", function(channel, user, message, self) {
     console.log(user);
-    var username = user['display-name'];
-    if (username == null) {
-        username = user.username
-    }
+    var username = user.username;
     if (user['user-type'] == "mod" || user.subscriber === true || user['user-id'] == user['room-id']) {
         mesArray = message.split(" ");
         console.log(mesArray.length);
@@ -52,7 +49,7 @@ client.on("chat", function(channel, user, message, self) {
             }
         } else if (mesArray[0] == "!checksteam") {
             if (mesArray.length == 1) {
-                username = user['display-name'];
+                username = user.username;
             }
             pythonCon(username, 'getSteam', function(pythData) {
                 console.log(pythData);
@@ -69,7 +66,7 @@ client.on("chat", function(channel, user, message, self) {
             });
         } else if (mesArray[0] == "!coinwins") {
             if (mesArray.length == 1) {
-                username = user['display-name'];
+                username = user.username;
             }
             pythonCon(username, 'coinWins', function(pythData) {
                 console.log(pythData);
@@ -93,7 +90,7 @@ client.on("chat", function(channel, user, message, self) {
             });
         } else if (mesArray[0] == "!rulecheck") {
             if (mesArray.length == 1) {
-                username = user['display-name'];
+                username = user.username;
             }
             pythonCon(username, 'rulecheck', function(pythData) {
                 console.log(pythData);
