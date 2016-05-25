@@ -98,7 +98,7 @@ def checkCSGO(steamID):
         return "Twitch and Steam not linked."
     try:
         info = json.loads(urlopen(
-            "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001?key=E6B9BEF1975FF027CD07A6BBE9C04D7B&steamid="
+            "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001?key="+fetchKey("steamAPIKey")+"&steamid="
             + steamID,
             timeout=60).read().decode('utf-8'))
         csgoDict = (info['response'])['games']
@@ -128,7 +128,7 @@ def is_number(s):
 
 
 def fetchKey(key):
-    with open('login.json') as key_file:
+    with open('data/login.json') as key_file:
         keys = json.loads(key_file.read())
     response = str(keys[key])
     return response
@@ -219,7 +219,7 @@ def coinCheck(user, num="all"):
 
 
 def steamBefore(steam):
-    steamFile = open("pastSteamIDs.txt", "r")
+    steamFile = open("data/pastSteamIDs.txt", "r")
     pastSteamIDs = steamFile.readlines()
     steamFile.close()
     if steam + "\n" not in pastSteamIDs:

@@ -1,7 +1,13 @@
 var irc = require("tmi.js");
-var fs = require("fs");
+var fs = require("fs")
 var PythonShell = require('python-shell');
-var logins = JSON.parse(fs.readFileSync('login.json', 'utf8'));
+var logins = JSON.parse(fs.readFileSync('data/login.json', 'utf8'));
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1; //January is 0!
+var yyyy = today.getFullYear();
+today = dd + '-' + mm + '-' + yyyy;
+// Options for connection
 var options = {
     options: {
         debug: true
@@ -17,20 +23,25 @@ var options = {
     channels: logins.twitchChannel
 };
 
-function pythonCon(user, func, cb) {
-    var pyshell = new PythonShell('nodeFunc.py');
-    pyshell.send(func);
-    pyshell.send(user);
-    pyshell.on('message', function(message) {
-        var pythData = message;
-        console.log(pythData);
-        cb(pythData);
-    });
-}
-
 var client = new irc.client(options);
 // Connect the client to the server..
 client.connect();
+
+//===================================== SUB NOTIFICATIONS ======================================
+
+client.on("subanniversary", function(channel, username, months) {
+    console.log(username);
+    fs.appendFile('data/subs.txt', username.toLowerCase() + "\n", function(err) {});
+    fs.appendFile('sub-logs/' + today + '.txt', username + " " + months + "\n", function(err) {});
+});
+client.on("subscription", function(channel, username) {
+    console.log(username);
+    fs.appendFile('data/subs.txt', username.toLowerCase() + "\n", function(err) {});
+    fs.appendFile('sub-logs/' + today + ".txt", username + "\n", function(err) {});
+});
+
+//===================================== CHAT COMMANDS ==========================================
+
 client.on("chat", function(channel, user, message, self) {
     console.log(user);
     var username = user.username;
@@ -43,7 +54,7 @@ client.on("chat", function(channel, user, message, self) {
         }
         if (mesArray[0] == "!append") {
             if (user['user-type'] == "mod" || user['user-id'] == user['room-id']) {
-                fs.appendFile('subs.txt', username + "\n", function(err) {});
+                fs.appendFile('data/subs.txt', username + "\n", function(err) {});
             } else {
               outputSend(channel, user, "Subs can't add themselves to the list. onsFacepalm");
             }
@@ -120,10 +131,24 @@ client.on("chat", function(channel, user, message, self) {
     }
 });
 
+//=============================== REQUIRED FUNCTIONS =========================================
+// Sends outputs to commands
 function outputSend(channel, user, msg) {
     if (user['user-type'] == 'mod' || user['user-id'] == user['room-id']) {
         client.action(channel, msg);
     } else if (user.subscriber === true) {
         client.whisper(user['display-name'], msg);
     }
+}
+
+// For calling functions from Python
+function pythonCon(user, func, cb) {
+    var pyshell = new PythonShell('nodeFunc.py');
+    pyshell.send(func);
+    pyshell.send(user);
+    pyshell.on('message', function(message) {
+        var pythData = message;
+        console.log(pythData);
+        cb(pythData);
+    });
 }

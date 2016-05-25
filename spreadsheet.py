@@ -7,33 +7,33 @@ print("Credentials being auth")
 loops = 0
 scope = ['https://spreadsheets.google.com/feeds']
 newRun = False
-credentials = ServiceAccountCredentials.from_json_keyfile_name('auth.json',
+credentials = ServiceAccountCredentials.from_json_keyfile_name('data/auth.json',
                                                                scope)
-steamFile = open("pastSteamIDs.txt", "r")
+steamFile = open("data/pastSteamIDs.txt", "r")
 pastSteamIDs = steamFile.readlines()
 steamFile.close()
 while True:
     if newRun == True:
         loops = 0
         newRun = False
-    with open('line.txt', 'r') as lineNum:
+    with open('data/line.txt', 'r') as lineNum:
         i = int(lineNum.read(10))
     gc = gspread.authorize(credentials)
     print("Connecting!")
     wks = gc.open_by_key(fetchKey("sheetKey"))
-    worksheet = wks.worksheet(dateNow())
-    #worksheet = wks.worksheet('sheetnamehere')
+    #worksheet = wks.worksheet(dateNow())
+    worksheet = wks.worksheet('Malta Week')
     lastSub = ''
     while loops < 100:
-        with open("subs.txt", "r") as f:
+        with open("data/subs.txt", "r") as f:
             lines = f.readlines()
-        with open("subs.txt", "w") as f:
+        with open("data/subs.txt", "w") as f:
             f.write("")
         while len(lines) > 0:
             print(lines)
             print(i)
             i = i + 1
-            with open('line.txt', 'w') as lineNum:
+            with open('data/line.txt', 'w') as lineNum:
                 lineNum.write(str(i))
             twitchUserCell = str("A" + str(i))
             steamUserCell = str("C" + str(i))
@@ -68,7 +68,7 @@ while True:
                         else:
                             worksheet.update_acell(coinCell, coinGen + "000")
                         pastSteamIDs.append(rawSteamUser)
-                        with open("pastSteamIDs.txt", 'a') as pastIDs:
+                        with open("data/pastSteamIDs.txt", 'a') as pastIDs:
                             pastIDs.write(rawSteamUser)
                         time.sleep(20)
                 else:

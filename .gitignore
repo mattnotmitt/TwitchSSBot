@@ -88,3 +88,5 @@ __pycache__
 .gitignore
 
 sub-logs
+
+data
