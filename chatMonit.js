@@ -1,5 +1,5 @@
 var irc = require("tmi.js");
-var fs = require("fs")
+var fs = require("fs");
 var PythonShell = require('python-shell');
 var logins = JSON.parse(fs.readFileSync('data/login.json', 'utf8'));
 var today = new Date();
