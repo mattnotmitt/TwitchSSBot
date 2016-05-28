@@ -181,7 +181,7 @@ def cmdSend(coins, twitchUser, fail, reason):
 
 def sheetAuth(sheet):
     scope = ['https://spreadsheets.google.com/feeds']
-    credentials = ServiceAccountCredentials.from_json_keyfile_name('auth.json',
+    credentials = ServiceAccountCredentials.from_json_keyfile_name('data/auth.json',
                                                                    scope)
     gc = gspread.authorize(credentials)
     wks = gc.open_by_key(fetchKey("sheetKey"))
