@@ -24,7 +24,7 @@ $ npm install python-shell
 $ npm install twitch-api
 ```
 ### Files which must be added
-
+Add these in a folder named data in the repo's root directory
 ```
 subs.txt
 pastSteamIDs.txt
