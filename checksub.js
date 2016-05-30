@@ -1,6 +1,6 @@
 var TwitchAPI = require('twitch-api');
 var fs = require('fs');
-var logins = JSON.parse(fs.readFileSync('login.json', 'utf8'));
+var logins = JSON.parse(fs.readFileSync('data/login.json', 'utf8'));
 var twitch = new TwitchAPI({
 	clientId: logins.twitchAPIClient,
 	clientSecret: logins.twitchAPISecret,
