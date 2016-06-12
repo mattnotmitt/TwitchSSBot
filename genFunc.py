@@ -2,7 +2,7 @@ import re, time, socket, gspread, asyncio, argparse, json, os, random
 from urllib.request import urlopen
 from urllib.error import URLError
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 
 # --------------------------------------------- Start Functions ----------------------------------------------------
@@ -67,6 +67,48 @@ def roll_coins():
     return (coins)
 
 
+def hottedRoll_coins():
+    roll = random.uniform(0, 100)
+    with open('data/rolls.txt', 'a') as rolls:
+        rolls.write(str(roll) + "\n")
+    if 0 <= roll < 10:
+        return ('0')
+    elif 10 <= roll < 20:
+        return ('1')
+    elif 20 <= roll < 40:
+        return ('2')
+    elif 40 <= roll < 70:
+        return ('3')
+    elif 70 <= roll < 90:
+        return ('5')
+    elif 90 <= roll < 99:
+        return ('10')
+    elif 99 <= roll < 99.5:
+        return ('50')
+    elif 99.5 <= roll < 100:
+        return ('100')
+
+
+def joaquimRoll_coins():
+    roll = random.uniform(0, 100)
+    if 0 <= roll < 10:
+        return ('respin')
+    elif 10 <= roll < 25:
+        return ('1')
+    elif 25 <= roll < 45:
+        return ('2')
+    elif 45 <= roll < 65:
+        return ('3')
+    elif 65 <= roll < 80:
+        return ('5')
+    elif 80 <= roll < 90:
+        return ('10')
+    elif 90 <= roll < 95:
+        return ('25')
+    elif 95 <= roll < 100:
+        return ('50')
+
+
 def check_userID(user):
     """ returns 0: online, 1: offline, 2: not found, 3: error """
     url = 'https://api.twitch.tv/api/channels/' + user
@@ -77,8 +119,24 @@ def check_userID(user):
         return 'User Not Found in Twitch Database'
 
 
+def acctAge(user):
+    """ returns 0: online, 1: offline, 2: not found, 3: error """
+    url = 'https://api.twitch.tv/kraken/users/' + user
+    info = json.loads(urlopen(url, timeout=15).read().decode('utf-8'))
+    created = datetime.strptime(info['created_at'][0:10], "%Y-%m-%d")
+    present = datetime.today() - timedelta(days=30)
+    return present > created
+
+
 def timeGet():
     os.environ['TZ'] = 'GB'
+    time.tzset()
+    timeRtNow = time.strftime('%X %Z %d/%m/%y')
+    return timeRtNow
+
+
+def hottedTimeGet():
+    os.environ['TZ'] = 'Europe/Berlin'
     time.tzset()
     timeRtNow = time.strftime('%X %Z %d/%m/%y')
     return timeRtNow
@@ -88,9 +146,10 @@ def dateNow():
     '''
     returns current date as a string
     '''
-    now = date.today()
-    full = str(now.day) + "/" + str(now.month) + "/" + str(now.year)
-    return full
+    os.environ['TZ'] = 'GB'
+    time.tzset()
+    timeRtNow = time.strftime('%-d/%-m/%Y')
+    return timeRtNow
 
 
 def checkCSGO(steamID):
@@ -98,8 +157,8 @@ def checkCSGO(steamID):
         return "Twitch and Steam not linked."
     try:
         info = json.loads(urlopen(
-            "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001?key="+fetchKey("steamAPIKey")+"&steamid="
-            + steamID,
+            "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001?key="
+            + fetchKey("steamAPIKey") + "&steamid=" + steamID,
             timeout=60).read().decode('utf-8'))
         csgoDict = (info['response'])['games']
         ownGame = (next(
@@ -107,10 +166,10 @@ def checkCSGO(steamID):
              if item["appid"] == 730), "Doesn't Own"))
         if ownGame != "Doesn't Own":
             hoursPlayed = float((ownGame['playtime_forever']) / 60)
-            if hoursPlayed >= 10:
+            if hoursPlayed >= 100:
                 return ("Eligible for Roll.")
             else:
-                return ("Does not have 10 hours in CSGO.")
+                return ("Does not have 100 hours in CSGO.")
         else:
             return ("Doesn't own CSGO.")
     except KeyError:
@@ -151,40 +210,48 @@ def check_user(user):
     return status
 
 
-def cmdSend(coins, twitchUser, fail, reason):
+def cmdSend(coins, twitchUser, fail, reason, streamer="#onscreenlol"):
     con = socket.socket()
     con.connect(("irc.twitch.tv", 6667))
-    send_pass(fetchKey("altTwitchOAuth"), con)
-    send_nick(fetchKey("altTwitchUser"), con)
+    send_pass(fetchKey("twitchOAuth"), con)
+    send_nick(fetchKey("twitchUser"), con)
     join_channel("#onscoinbot", con)
-    join_channel("#onscreenlol", con)
-    if fail == False:
-        send_message("#onscoinbot", ('!coins ' + coins + " " + twitchUser),
+    join_channel(streamer, con)
+    if fail == 'False':
+        send_message("#onscoinbot",
+                     ('!' + streamer + 'coins ' + coins + " " + twitchUser),
                      con)
-        if check_user('onscreenlol') == 1:
+        if check_user(streamer[1:]) == 1 or streamer[1:] == "hotted89":
             if coins != "0":
-                send_message("#onscreenlol",
-                             ("/me " + twitchUser + " won " + coins +
-                              "k CSGODouble Coins."), con)
+                send_message(streamer, ("/me " + twitchUser + " won " + coins +
+                                        "k CSGODouble Coins."), con)
             else:
-                send_message("#onscreenlol", "/me " + twitchUser + " won " +
-                             coins + " CSGODouble Coins. FeelsBadMan", con)
-    elif fail == True:
-        send_message("#onscoinbot", '!fail ' + twitchUser + ' ' + reason, con)
-        if check_user('onscreenlol') == 1:
-            send_message("#onscreenlol",
-                         ("/me" + twitchUser +
-                          " does not qualify for CSGODouble coins. Reason: " +
-                          reason), con)
+                send_message(streamer, "/me " + twitchUser + " won " + coins +
+                             " CSGODouble Coins. FeelsBadMan", con)
+    elif fail == 'True':
+        send_message("#onscoinbot",
+                     '!' + streamer + 'fail ' + twitchUser + ' ' + reason, con)
+        if check_user(streamer[1:]) == 1:
+            print('stream offline')
+            send_message(streamer, (
+                "/me " + twitchUser +
+                " does not qualify for CSGODouble coins. Reason: " + reason),
+                         con)
+    elif fail == 'respin':
+        send_message("#onscoinbot",
+                     '!' + streamer + 'timeoutreroll ' + twitchUser, con)
+        if check_user(streamer[1:]) == 1:
+            send_message(streamer, "/me " + twitchUser +
+                         " gets a reroll and a 60 second timeout!", con)
     con.close()
 
 
-def sheetAuth(sheet):
+def sheetAuth(sheet, sheetKey):
     scope = ['https://spreadsheets.google.com/feeds']
-    credentials = ServiceAccountCredentials.from_json_keyfile_name('data/auth.json',
-                                                                   scope)
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(
+        'data/auth.json', scope)
     gc = gspread.authorize(credentials)
-    wks = gc.open_by_key(fetchKey("sheetKey"))
+    wks = gc.open_by_key(sheetKey)
     worksheet = wks.worksheet(sheet)
     return worksheet
 
@@ -192,7 +259,7 @@ def sheetAuth(sheet):
 def coinCheck(user, num="all"):
     i = 0
     wonList = []
-    worksheet = sheetAuth("All subs")
+    worksheet = sheetAuth("All subs", fetchKey("sheetKey"))
     coinsWon = worksheet.findall(user)
     timesRolled = len(coinsWon) - 1
     if timesRolled < 0:
@@ -219,10 +286,14 @@ def coinCheck(user, num="all"):
 
 
 def steamBefore(steam):
-    steamFile = open("data/pastSteamIDs.txt", "r")
-    pastSteamIDs = steamFile.readlines()
-    steamFile.close()
-    if steam + "\n" not in pastSteamIDs:
+    pastUsers = {}
+    with open("data/pastSteamIDs.txt") as f:
+        for line in f:
+            #print(line)
+            lineArr = line.split(' ')
+            pastUsers[lineArr[1][0:-1]] = lineArr[0]
+
+    if steam not in pastUsers:
         return False
     else:
-        return True
+        return pastUsers[steam]

@@ -16,10 +16,10 @@ def callFunc():
         response = checkCSGO(check_userID(user))
         if response == "Eligible for Roll.":
             steamList = steamBefore(check_userID(user))
-            if steamList == True:
-                print("Steam account used since 1st "+mydate.strftime("%B"))
-            elif steamList == False:
+            if steamList == False:
                 print(response)
+            else:
+                print("Steam account used since 1st "+mydate.strftime("%B")+" by account '"+steamList+"'.")
         else:
             print(response)
 
