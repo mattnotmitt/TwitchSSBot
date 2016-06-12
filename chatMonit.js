@@ -35,13 +35,11 @@ client.on("subanniversary", function(channel, username, months) {
     console.log(username);
     console.log(channel.substring(1));
     fs.appendFile('data/'+channel.substring(1)+'subs.txt', username.toLowerCase() + "\n", function(err) {});
-    fs.appendFile('sub-logs-'+channel.substring(1)+'/' + today + '.txt', username + " " + months + "\n", function(err) {});
 });
 client.on("subscription", function(channel, username) {
     console.log(username);
     console.log(channel.substring(1));
     fs.appendFile('data/'+channel.substring(1)+'subs.txt', username.toLowerCase() + "\n", function(err) {});
-    fs.appendFile('sub-logs-'+channel.substring(1)+'/' + today + ".txt", username + "\n", function(err) {});
 });
 
 //===================================== CHAT COMMANDS ==========================================
