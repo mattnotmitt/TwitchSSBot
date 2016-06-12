@@ -87,10 +87,12 @@ __pycache__
 
 .gitignore
 
-sub-logs*
+sub-logs*/
 
-data
+data/
 
 hotted*
 
 joaquim*
+
+valkia*
