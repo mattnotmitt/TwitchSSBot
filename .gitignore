@@ -87,7 +87,9 @@ __pycache__
 
 .gitignore
 
-sub-logs*/
+sub-logs-hotted89/
+
+sub-logs-onscreenlol/
 
 data/
 
