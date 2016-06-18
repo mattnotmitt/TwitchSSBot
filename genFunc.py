@@ -58,16 +58,6 @@ def get_message(msg):
 # --------------------------------------------- End Helper Functions -----------------------------------------------
 # --------------------------------------------- Main Functions -----------------------------------------------------
 def roll_coins():
-    coinChoices = ["100", "2", "0", "4", "5", "0", "1", "1", "0", "4", "2",
-                   "0", "2", "5", "0", "1", "4", "50", "0", "1", "5", "0", "3",
-                   "5", "0", "5", "5", "0", "25", "3", "0", "5", "10", "0",
-                   "5", "3", "0", "3", "3", "10", "0", "5", "4", "0", "5", "2",
-                   "4", "0", "2", "1"]
-    coins = coinChoices[random.randint(0, 49)]
-    return (coins)
-
-
-def hottedRoll_coins():
     roll = random.uniform(0, 100)
     with open('data/rolls.txt', 'a') as rolls:
         rolls.write(str(roll) + "\n")
@@ -88,29 +78,8 @@ def hottedRoll_coins():
     elif 99.5 <= roll < 100:
         return ('100')
 
-
-def joaquimRoll_coins():
-    roll = random.uniform(0, 100)
-    if 0 <= roll < 10:
-        return ('respin')
-    elif 10 <= roll < 25:
-        return ('1')
-    elif 25 <= roll < 45:
-        return ('2')
-    elif 45 <= roll < 65:
-        return ('3')
-    elif 65 <= roll < 80:
-        return ('5')
-    elif 80 <= roll < 90:
-        return ('10')
-    elif 90 <= roll < 95:
-        return ('25')
-    elif 95 <= roll < 100:
-        return ('50')
-
-
+# Fetches a user's steam ID
 def check_userID(user):
-    """ returns 0: online, 1: offline, 2: not found, 3: error """
     url = 'https://api.twitch.tv/api/channels/' + user
     try:
         info = json.loads(urlopen(url, timeout=15).read().decode('utf-8'))
@@ -118,40 +87,28 @@ def check_userID(user):
     except URLError as e:
         return 'User Not Found in Twitch Database'
 
-
+# Checks if a twitch account is 30 days old
 def acctAge(user):
-    """ returns 0: online, 1: offline, 2: not found, 3: error """
     url = 'https://api.twitch.tv/kraken/users/' + user
     info = json.loads(urlopen(url, timeout=15).read().decode('utf-8'))
     created = datetime.strptime(info['created_at'][0:10], "%Y-%m-%d")
     present = datetime.today() - timedelta(days=30)
     return present > created
 
-
+# Gets current time and date
 def timeGet():
-    os.environ['TZ'] = 'GB'
-    time.tzset()
     timeRtNow = time.strftime('%X %Z %d/%m/%y')
     return timeRtNow
 
-
-def hottedTimeGet():
-    os.environ['TZ'] = 'Europe/Berlin'
-    time.tzset()
-    timeRtNow = time.strftime('%X %Z %d/%m/%y')
-    return timeRtNow
-
-
+# Gets current date
 def dateNow():
     '''
     returns current date as a string
     '''
-    os.environ['TZ'] = 'GB'
-    time.tzset()
     timeRtNow = time.strftime('%-d/%-m/%Y')
     return timeRtNow
 
-
+# Checks if a user owns CSGO and has 100 hrs in it
 def checkCSGO(steamID):
     if steamID == 'User Not Found in Twitch Database' or steamID == None:
         return "Twitch and Steam not linked."
@@ -177,7 +134,7 @@ def checkCSGO(steamID):
     except socket.timeout:
         return ("Steam Connection Timed Out.")
 
-
+# Checks if a string is a number
 def is_number(s):
     try:
         float(s)
@@ -185,14 +142,14 @@ def is_number(s):
     except ValueError:
         return False
 
-
+# Fetches a key from the login.json file
 def fetchKey(key):
     with open('data/login.json') as key_file:
         keys = json.loads(key_file.read())
     response = str(keys[key])
     return response
 
-
+# Checks stream status
 def check_user(user):
     """ returns 0: online, 1: offline, 2: not found, 3: error """
     url = 'https://api.twitch.tv/kraken/streams/' + user
@@ -209,19 +166,19 @@ def check_user(user):
             status = 3
     return status
 
-
-def cmdSend(coins, twitchUser, fail, reason, streamer="#onscreenlol"):
+# Sends the command to the bot and the twitch chat
+def cmdSend(coins, twitchUser, fail, reason, streamer):
     con = socket.socket()
     con.connect(("irc.twitch.tv", 6667))
     send_pass(fetchKey("twitchOAuth"), con)
     send_nick(fetchKey("twitchUser"), con)
-    join_channel("#onscoinbot", con)
+    join_channel("# "+fetchKey("twitchUser"), con)
     join_channel(streamer, con)
     if fail == 'False':
         send_message("#onscoinbot",
                      ('!' + streamer + 'coins ' + coins + " " + twitchUser),
                      con)
-        if check_user(streamer[1:]) == 1 or streamer[1:] == "hotted89":
+        if check_user(streamer[1:]) == 1:
             if coins != "0":
                 send_message(streamer, ("/me " + twitchUser + " won " + coins +
                                         "k CSGODouble Coins."), con)
@@ -229,23 +186,17 @@ def cmdSend(coins, twitchUser, fail, reason, streamer="#onscreenlol"):
                 send_message(streamer, "/me " + twitchUser + " won " + coins +
                              " CSGODouble Coins. FeelsBadMan", con)
     elif fail == 'True':
-        send_message("#onscoinbot",
+        send_message("# "+fetchKey("twitchUser"),
                      '!' + streamer + 'fail ' + twitchUser + ' ' + reason, con)
         if check_user(streamer[1:]) == 1:
             print('stream offline')
-            send_message(streamer, (
+            send_message("# "+fetchKey("twitchUser"), (
                 "/me " + twitchUser +
                 " does not qualify for CSGODouble coins. Reason: " + reason),
                          con)
-    elif fail == 'respin':
-        send_message("#onscoinbot",
-                     '!' + streamer + 'timeoutreroll ' + twitchUser, con)
-        if check_user(streamer[1:]) == 1:
-            send_message(streamer, "/me " + twitchUser +
-                         " gets a reroll and a 60 second timeout!", con)
     con.close()
 
-
+# Authorises the sheet
 def sheetAuth(sheet, sheetKey):
     scope = ['https://spreadsheets.google.com/feeds']
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
@@ -255,7 +206,7 @@ def sheetAuth(sheet, sheetKey):
     worksheet = wks.worksheet(sheet)
     return worksheet
 
-
+# Check coins won in the past
 def coinCheck(user, num="all"):
     i = 0
     wonList = []
@@ -283,17 +234,3 @@ def coinCheck(user, num="all"):
         return "False"
     else:
         return wonList
-
-
-def steamBefore(steam):
-    pastUsers = {}
-    with open("data/pastSteamIDs.txt") as f:
-        for line in f:
-            #print(line)
-            lineArr = line.split(' ')
-            pastUsers[lineArr[1][0:-1]] = lineArr[0]
-
-    if steam not in pastUsers:
-        return False
-    else:
-        return pastUsers[steam]

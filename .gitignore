@@ -68,33 +68,3 @@
 ehthumbs.db
 
 Thumbs.db
-
-# Repo Files #
-
-######################
-
-line.txt
-
-auth.json
-
-subs.txt
-
-pastSteamIDs.txt
-
-login.json
-
-__pycache__
-
-.gitignore
-
-sub-logs-hotted89/
-
-sub-logs-onscreenlol/
-
-data/
-
-hotted*
-
-joaquim*
-
-valkia*

@@ -22,7 +22,7 @@
 			}
 		</script>
 		<meta charset="UTF-8">
-		<title>Roll Output for ONSCREENlol</title>
+		<title>Roll Output for "streamer"</title>
 	</head>
 	<body style="position: relative;">
 		<div id="gifContain" style="width:500px;height:250px;"></div>
@@ -36,7 +36,7 @@
 					cluster: "aws",
 					reconnect: true
 				},
-				channels: ["#onscoinbot"]
+				channels: ["#INSERTBOTNAMEHERE"]
 			};
 
 			var client = new irc.client(options);
@@ -48,7 +48,7 @@
 			client.on("chat", function (channel, user, message, self) {
 				var name = user.username;
 				console.log(name);
-				if (name=="artemisbot" || name=="onscreenlol") {
+				if (name=="INSERTBOTNAMEHERE") {
 					console.log("I spoke.")
 					mesArray=message.split(" ");
 					if (mesArray[0]=="!coins") {

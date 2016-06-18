@@ -14,14 +14,7 @@ def callFunc():
             print((', '.join(map(str, wonCoins))))
     elif func == "rulecheck":
         response = checkCSGO(check_userID(user))
-        if response == "Eligible for Roll.":
-            steamList = steamBefore(check_userID(user))
-            if steamList == False:
-                print(response)
-            else:
-                print("Steam account used since 1st "+mydate.strftime("%B")+" by account '"+steamList+"'.")
-        else:
-            print(response)
+        print(response)
 
 
 callFunc()
