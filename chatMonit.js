@@ -1,6 +1,5 @@
-var irc = require("tmi.js");
+var tmi = require("tmi.js");
 var fs = require("fs");
-//var RegEx = require("regex");
 //var PythonShell = require('python-shell');        Only required for the extra chat functions
 var logins = JSON.parse(fs.readFileSync('data/login.json', 'utf8'));
 var today = new Date();
@@ -25,13 +24,13 @@ var options = {
   channels: logins.twitchChannel
 };
 
-var client = new irc.client(options);
+var client = new tmi.client(options);
 // Connect the client to the server..
 client.connect();
 
 //===================================== SUB NOTIFICATIONS ======================================
 
-client.on("subanniversary", function(channel, username, months) {
+client.on("resub", function(channel, username, months, message) {
   console.log(username);
   console.log(channel.substring(1));
   fs.appendFile('data/subs.txt', username.toLowerCase() + "\n", function(err) {});

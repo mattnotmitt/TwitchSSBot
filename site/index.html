@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="style.css">
-		<script src="http://cdn.tmijs.org/js/latest/tmi.js"></script>
+		<script src="//cdn.tmijs.org/js/1.0.0/tmi.min.js"></script>
 		<script src="http://code.jquery.com/jquery.min.js"></script>
 		<script>
 		    function removeElement(parentDiv, childDiv){
@@ -39,7 +39,7 @@
 				channels: ["#INSERTBOTNAMEHERE"]
 			};
 
-			var client = new irc.client(options);
+			var client = new tmi.client(options);
 			$("#sub\\-name").fadeOut();
 			$("#gifContain").fadeOut();
 			$("#fail\\-msg").fadeOut();
