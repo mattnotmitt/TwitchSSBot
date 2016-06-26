@@ -18,7 +18,7 @@ while True:
         with open('data/line.txt', 'r') as lineNum:
             i = int(lineNum.read(10))
         gc = gspread.authorize(credentials)
-        print("Connecting!")
+        #print("Connecting!")
         wks = gc.open_by_key(fetchKey("sheetKey"))
         worksheet = wks.worksheet(dateNow())
         #worksheet = wks.worksheet('Auto Subs')
