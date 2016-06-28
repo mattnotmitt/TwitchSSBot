@@ -1,4 +1,4 @@
-# CSGODouble Coins for Subs Code
+# Coins for Subs Code
 This is a project I created for [ONSCREENlol][craig] on twitch.tv.
 
 It automatically uploads subs for a specified channel to a specified Google Sheet. Feel free to use this on your own stream, as long as you credit me.
